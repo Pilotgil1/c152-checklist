@@ -1,0 +1,807 @@
+<title>Cessna 152 Checklist</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="C152 Checklist">
+<meta name="theme-color" content="#3c5a76">
+<style>
+  :root{
+    --ink:#1c2430;
+    --ink-soft:#5b6472;
+    --paper:#f6f2e8;
+    --paper-raised:#fffdf8;
+    --rule:#dcd3bd;
+    --steel:#3c5a76;
+    --steel-ink:#fff;
+    --accent:#d21f1f;
+    --accent-ink:#fff5f2;
+    --warn-bg:#f3e3c8;
+    --warn-ink:#7a4a12;
+    --shadow:0 1px 2px rgba(28,36,48,.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#e9e4d6;
+      --ink-soft:#9aa3b0;
+      --paper:#12161d;
+      --paper-raised:#1b212b;
+      --rule:#2b323d;
+      --steel:#6f9dc6;
+      --steel-ink:#0c1620;
+      --accent:#ff5245;
+      --accent-ink:#230b08;
+      --warn-bg:#3a2c15;
+      --warn-ink:#e6c07a;
+      --shadow:0 1px 3px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#e9e4d6;
+    --ink-soft:#9aa3b0;
+    --paper:#12161d;
+    --paper-raised:#1b212b;
+    --rule:#2b323d;
+    --steel:#6f9dc6;
+    --steel-ink:#0c1620;
+    --accent:#ff5245;
+    --accent-ink:#230b08;
+    --warn-bg:#3a2c15;
+    --warn-ink:#e6c07a;
+    --shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{height:100%;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    overflow:hidden;
+  }
+
+  header{
+    flex:0 0 auto;
+    padding:12px 16px 8px;
+    padding-top:calc(12px + env(safe-area-inset-top,0px));
+    border-bottom:1px solid var(--rule);
+    background:var(--paper-raised);
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+  h1{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+  .tail{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:13px;
+    color:var(--ink-soft);
+    letter-spacing:.08em;
+  }
+
+  .frame{
+    flex:1 1 auto;
+    display:flex;
+    min-height:0;
+  }
+
+  .rail{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    padding:14px 0;
+    overflow-y:auto;
+    scrollbar-width:none;
+  }
+  .rail::-webkit-scrollbar{display:none;}
+  .rail.left{ align-items:flex-start; }
+  .rail.right{ align-items:flex-end; }
+
+  .tab{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    writing-mode:vertical-rl;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:10px 6px;
+    min-height:64px;
+    border:1px solid var(--rule);
+    background:var(--paper-raised);
+    color:var(--ink-soft);
+    cursor:pointer;
+    line-height:1.15;
+  }
+  .rail.left .tab{
+    border-left:none;
+    border-radius:0 8px 8px 0;
+    transform:rotate(180deg);
+    margin-left:-1px;
+  }
+  .rail.right .tab{
+    border-right:none;
+    border-radius:8px 0 0 8px;
+    margin-right:-1px;
+  }
+  .rail.left .tab[aria-selected="true"]{
+    background:var(--steel);
+    border-color:var(--steel);
+    color:var(--steel-ink);
+    box-shadow:var(--shadow);
+    z-index:1;
+    position:relative;
+  }
+  .rail.right .tab{
+    color:var(--accent);
+    border-color:var(--accent);
+  }
+  .rail.right .tab[aria-selected="true"]{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:var(--accent-ink);
+    box-shadow:var(--shadow);
+    z-index:1;
+    position:relative;
+  }
+  .tab.speeds{ font-style:normal; }
+
+  main{
+    flex:1 1 auto;
+    min-width:0;
+    overflow-y:auto;
+    padding:18px 20px 24px;
+  }
+  .phaseHead{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:12px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--ink);
+  }
+  .phaseHead.emg{ border-bottom-color:var(--accent); }
+  .phaseTitle{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight:700;
+    font-size:24px;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+  }
+  .phaseHead.emg .phaseTitle{ color:var(--accent); }
+  .phaseCount{
+    font-size:12px;
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .items{ display:flex; flex-direction:column; }
+
+  .item{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    padding:8px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .item.sub{
+    padding-left:1.9em;
+    border-bottom:1px dashed var(--rule);
+  }
+  .item .num{
+    flex:0 0 auto;
+    min-width:1.5em;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+  }
+  .item.sub .num{ min-width:1.3em; font-size:13px; }
+  .challenge{
+    flex:1 1 auto;
+    font-weight:600;
+    font-size:15.5px;
+    line-height:1.35;
+  }
+  .item.sub .challenge{ font-size:14.5px; }
+  .leader{
+    flex:1 1 auto;
+    border-bottom:1px dotted var(--rule);
+    min-width:14px;
+    margin-bottom:4px;
+  }
+  .response{
+    flex:0 0 auto;
+    max-width:46%;
+    font-weight:700;
+    font-size:14.5px;
+    text-align:right;
+    color:var(--steel);
+    line-height:1.3;
+  }
+  .phaseHead.emg ~ .items .response{ color:var(--accent); }
+
+  .stationHead{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight:700;
+    font-size:17px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--steel);
+    margin:18px 0 4px;
+    padding-bottom:4px;
+    border-bottom:1px solid var(--rule);
+  }
+  .items > .stationHead:first-child{ margin-top:0; }
+
+  .branchHead{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:14px 0 2px;
+  }
+  .items > .branchHead:first-child{ margin-top:0; }
+
+  .note, .warning{
+    font-size:13.5px;
+    line-height:1.4;
+    border-radius:8px;
+    padding:8px 10px;
+    margin:8px 0;
+  }
+  .note{
+    background:color-mix(in srgb, var(--steel) 12%, transparent);
+    border:1px solid var(--steel);
+    color:var(--ink);
+  }
+  .warning{
+    background:var(--warn-bg);
+    border:1px solid var(--warn-ink);
+    color:var(--warn-ink);
+  }
+  .note strong, .warning strong{ letter-spacing:.04em; }
+
+  .speedGroup{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:16px 0 4px;
+  }
+  .items > .speedGroup:first-child{ margin-top:0; }
+  .speedRow .response{ font-size:16px; }
+</style>
+
+
+<header>
+  <h1>Cessna 152</h1>
+  <span class="tail">N152XX &middot; O-235</span>
+</header>
+
+<div class="frame">
+  <nav class="rail left" id="railLeft"></nav>
+  <main id="main">
+    <div class="phaseHead" id="phaseHead">
+      <span class="phaseTitle" id="phaseTitle"></span>
+      <span class="phaseCount" id="phaseCount"></span>
+    </div>
+    <div class="items" id="itemList"></div>
+  </main>
+  <nav class="rail right" id="railRight"></nav>
+</div>
+
+<script>
+(function(){
+  // ---- Data model ----
+  // Checklist phase entries:
+  //   {type:"item", c:"challenge", r:"response" | ["line1","line2"] | null, sub:[["a","challenge","response"], ...]}
+  //   {type:"station", sym:"①", title:"CABIN"}      -- resets numbering, big heading (preflight only)
+  //   {type:"branch", text:"If engine starts:", reset:true|false}  -- small heading, optional renumber
+  //   {type:"note"|"warning", text:"..."}
+  // Speeds phase: {kind:"speeds", groups:[{title:"Takeoff", rows:[["label","value"],...]}]}
+
+  var NORMAL = [
+    {id:"n-speeds", label:"Airspeeds", kind:"speeds", groups:[
+      {title:"Takeoff", rows:[
+        ["Normal Climb Out","65-75 KIAS"],
+        ["Short Field, Flaps 10°, at 50 Ft","54 KIAS"]
+      ]},
+      {title:"Climb, Flaps Up", rows:[
+        ["Normal","70-80 KIAS"],
+        ["Best Rate, Sea Level","67 KIAS"],
+        ["Best Rate, 10,000 Ft","61 KIAS"],
+        ["Best Angle, Sea Level thru 10,000 Ft","55 KIAS"]
+      ]},
+      {title:"Landing Approach", rows:[
+        ["Normal Approach, Flaps Up","60-70 KIAS"],
+        ["Normal Approach, Flaps 30°","55-65 KIAS"],
+        ["Short Field Approach, Flaps 30°","54 KIAS"]
+      ]},
+      {title:"Balked Landing", rows:[
+        ["Maximum Power, Flaps 20°","55 KIAS"]
+      ]},
+      {title:"Max Turbulent Air Penetration", rows:[
+        ["1670 Lbs","104 KIAS"],
+        ["1500 Lbs","98 KIAS"],
+        ["1350 Lbs","93 KIAS"]
+      ]},
+      {title:"Crosswind", rows:[
+        ["Max Demonstrated Velocity","12 KNOTS"]
+      ]}
+    ]},
+    {id:"n-preflight", label:"Preflight", entries:[
+      {type:"station", sym:"①", title:"Cabin"},
+      {type:"item", c:"Control Wheel Lock", r:"REMOVE"},
+      {type:"item", c:"Ignition Switch", r:"OFF"},
+      {type:"item", c:"Master Switch", r:"ON"},
+      {type:"item", c:"Fuel Quantity Indicators", r:"CHECK QUANTITY"},
+      {type:"item", c:"Master Switch", r:"OFF"},
+      {type:"item", c:"Fuel Shutoff Valve", r:"ON"},
+
+      {type:"station", sym:"②", title:"Empennage"},
+      {type:"item", c:"Rudder Gust Lock", r:"REMOVE"},
+      {type:"item", c:"Tail Tie-Down", r:"DISCONNECT"},
+      {type:"item", c:"Control Surfaces", r:"CHECK freedom of movement and security"},
+
+      {type:"station", sym:"③", title:"Right Wing Trailing Edge"},
+      {type:"item", c:"Aileron", r:"CHECK freedom of movement and security"},
+
+      {type:"station", sym:"④", title:"Right Wing"},
+      {type:"item", c:"Wing Tie-Down", r:"DISCONNECT"},
+      {type:"item", c:"Main Wheel Tire", r:"CHECK for proper inflation"},
+      {type:"item", c:"Fuel tank sump quick drain (first flight of day / after refueling)", r:"DRAIN sample, check water/sediment/grade"},
+      {type:"item", c:"Fuel Quantity", r:"CHECK VISUALLY for desired level"},
+      {type:"item", c:"Fuel Filler Cap", r:"SECURE"},
+
+      {type:"station", sym:"⑤", title:"Nose"},
+      {type:"item", c:"Engine Oil Level", r:"CHECK, 4 qt min, 6 qt for extended flight"},
+      {type:"item", c:"Fuel strainer drain knob (first flight of day / after refueling)", r:"PULL ~4 sec, check drain closed"},
+      {type:"item", c:"Propeller and Spinner", r:"CHECK for nicks and security"},
+      {type:"item", c:"Carburetor Air Filter", r:"CHECK for restriction"},
+      {type:"item", c:"Landing Light(s)", r:"CHECK condition and cleanliness"},
+      {type:"item", c:"Nose Wheel Strut and Tire", r:"CHECK for proper inflation"},
+      {type:"item", c:"Nose Tie-Down", r:"DISCONNECT"},
+      {type:"item", c:"Static Source Opening (left fuselage)", r:"CHECK for stoppage"},
+
+      {type:"station", sym:"⑥", title:"Left Wing"},
+      {type:"item", c:"Main Wheel Tire", r:"CHECK for proper inflation"},
+      {type:"item", c:"Fuel tank sump quick drain (first flight of day / after refueling)", r:"DRAIN sample, check water/sediment/grade"},
+      {type:"item", c:"Fuel Quantity", r:"CHECK VISUALLY for desired level"},
+      {type:"item", c:"Fuel Filler Cap", r:"SECURE"},
+
+      {type:"station", sym:"⑦", title:"Left Wing Leading Edge"},
+      {type:"item", c:"Pitot Tube Cover", r:"REMOVE, check opening for stoppage"},
+      {type:"item", c:"Stall Warning Opening", r:null, sub:null},
+      {type:"item", c:"Fuel Tank Vent Opening", r:"CHECK for stoppage"},
+      {type:"item", c:"Wing Tie-Down", r:"DISCONNECT"},
+
+      {type:"station", sym:"⑧", title:"Left Wing Trailing Edge"},
+      {type:"item", c:"Aileron", r:"CHECK freedom of movement and security"}
+    ]},
+    {id:"n-beforestart", label:"Before Start", entries:[
+      {type:"item", c:"Preflight Inspection", r:"COMPLETE"},
+      {type:"item", c:"Seats, Belts, Shoulder Harnesses", r:"ADJUST and LOCK"},
+      {type:"item", c:"Fuel Shutoff Valve", r:"ON"},
+      {type:"item", c:"Radios, Electrical Equipment", r:"OFF"},
+      {type:"item", c:"Brakes", r:"TEST and SET"},
+      {type:"item", c:"Circuit Breakers", r:"CHECK IN"}
+    ]},
+    {id:"n-start", label:"Start", entries:[
+      {type:"branch", text:"Temperatures above freezing", reset:false},
+      {type:"item", c:"Mixture", r:"RICH"},
+      {type:"item", c:"Carburetor Heat", r:"COLD"},
+      {type:"item", c:"Prime", r:"AS REQUIRED (up to 3 strokes)"},
+      {type:"item", c:"Throttle", r:"OPEN 1/2 INCH"},
+      {type:"item", c:"Propeller Area", r:"CLEAR"},
+      {type:"item", c:"Master Switch", r:"ON"},
+      {type:"item", c:"Ignition Switch", r:"START, release when engine starts"},
+      {type:"item", c:"Throttle", r:"ADJUST for 1000 RPM or less"},
+      {type:"item", c:"Oil Pressure", r:"CHECK"}
+    ]},
+    {id:"n-beforeto", label:"Before Takeoff", entries:[
+      {type:"item", c:"Parking Brake", r:"SET"},
+      {type:"item", c:"Cabin Doors", r:"CLOSED and LATCHED"},
+      {type:"item", c:"Flight Controls", r:"FREE and CORRECT"},
+      {type:"item", c:"Flight Instruments", r:"SET"},
+      {type:"item", c:"Fuel Shutoff Valve", r:"ON"},
+      {type:"item", c:"Mixture", r:"RICH (below 3000 ft)"},
+      {type:"item", c:"Elevator Trim", r:"TAKEOFF"},
+      {type:"item", c:"Throttle", r:"1700 RPM", sub:[
+        ["a","Magnetos","CHECK, max drop 125 RPM, 50 RPM differential"],
+        ["b","Carburetor Heat","CHECK for RPM drop"],
+        ["c","Engine Instruments and Ammeter","CHECK"],
+        ["d","Suction Gage","CHECK"]
+      ]},
+      {type:"item", c:"Radios", r:"SET"},
+      {type:"item", c:"Beacon, Nav Lights, Strobes", r:"ON as required"},
+      {type:"item", c:"Throttle Friction Lock", r:"ADJUST"},
+      {type:"item", c:"Brakes", r:"RELEASE"}
+    ]},
+    {id:"n-takeoff", label:"Takeoff", entries:[
+      {type:"item", c:"Wing Flaps", r:"0°-10°"},
+      {type:"item", c:"Carburetor Heat", r:"COLD"},
+      {type:"item", c:"Throttle", r:"FULL OPEN"},
+      {type:"item", c:"Elevator Control", r:"LIFT NOSE WHEEL at 50 KIAS"},
+      {type:"item", c:"Climb Speed", r:"65-75 KIAS"}
+    ]},
+    {id:"n-sftakeoff", label:"Short Field Takeoff", entries:[
+      {type:"item", c:"Wing Flaps", r:"10°"},
+      {type:"item", c:"Carburetor Heat", r:"COLD"},
+      {type:"item", c:"Brakes", r:"APPLY"},
+      {type:"item", c:"Throttle", r:"FULL OPEN"},
+      {type:"item", c:"Mixture", r:"RICH (LEAN above 3000 ft for max RPM)"},
+      {type:"item", c:"Brakes", r:"RELEASE"},
+      {type:"item", c:"Elevator Control", r:"SLIGHTLY TAIL LOW"},
+      {type:"item", c:"Climb Speed", r:"54 KIAS until obstacles cleared"},
+      {type:"item", c:"Wing Flaps", r:"RETRACT slowly after 60 KIAS"}
+    ]},
+    {id:"n-climb", label:"Enroute Climb", entries:[
+      {type:"item", c:"Airspeed", r:"70-80 KIAS"},
+      {type:"note", text:"For a maximum performance climb, use speeds from the Rate of Climb chart in Section 5."},
+      {type:"item", c:"Throttle", r:"FULL OPEN"},
+      {type:"item", c:"Mixture", r:"RICH below 3000 ft, LEAN for max RPM above"}
+    ]},
+    {id:"n-cruise", label:"Cruise", entries:[
+      {type:"item", c:"Power", r:"1900-2550 RPM (≤75%)"},
+      {type:"item", c:"Elevator Trim", r:"ADJUST"},
+      {type:"item", c:"Mixture", r:"LEAN"}
+    ]},
+    {id:"n-beforeland", label:"Before Landing", entries:[
+      {type:"item", c:"Seats, Belts, Harnesses", r:"ADJUST and LOCK"},
+      {type:"item", c:"Mixture", r:"RICH"},
+      {type:"item", c:"Carburetor Heat", r:"ON, apply full heat before closing throttle"}
+    ]},
+    {id:"n-landing", label:"Landing", entries:[
+      {type:"item", c:"Airspeed", r:"60-70 KIAS (flaps UP)"},
+      {type:"item", c:"Wing Flaps", r:"AS DESIRED (below 85 KIAS)"},
+      {type:"item", c:"Airspeed", r:"55-65 KIAS (flaps DOWN)"},
+      {type:"item", c:"Touchdown", r:"MAIN WHEELS FIRST"},
+      {type:"item", c:"Landing Roll", r:"LOWER NOSE WHEEL GENTLY"},
+      {type:"item", c:"Braking", r:"MINIMUM REQUIRED"}
+    ]},
+    {id:"n-sflanding", label:"Short Field Landing", entries:[
+      {type:"item", c:"Airspeed", r:"60-70 KIAS (flaps UP)"},
+      {type:"item", c:"Wing Flaps", r:"30° (below 85 KIAS)"},
+      {type:"item", c:"Airspeed", r:"MAINTAIN 54 KIAS"},
+      {type:"item", c:"Power", r:"REDUCE to idle as obstacle cleared"},
+      {type:"item", c:"Touchdown", r:"MAIN WHEEL FIRST"},
+      {type:"item", c:"Brakes", r:"APPLY HEAVILY"},
+      {type:"item", c:"Wing Flaps", r:"RETRACT"}
+    ]},
+    {id:"n-balked", label:"Balked Landing", entries:[
+      {type:"item", c:"Throttle", r:"FULL OPEN"},
+      {type:"item", c:"Carburetor Heat", r:"COLD"},
+      {type:"item", c:"Wing Flaps", r:"RETRACT to 20°"},
+      {type:"item", c:"Airspeed", r:"55 KIAS"},
+      {type:"item", c:"Wing Flaps", r:"RETRACT slowly"}
+    ]},
+    {id:"n-afterland", label:"After Landing", entries:[
+      {type:"item", c:"Wing Flaps", r:"UP"},
+      {type:"item", c:"Carburetor Heat", r:"COLD"}
+    ]},
+    {id:"n-secure", label:"Securing", entries:[
+      {type:"item", c:"Parking Brake", r:"SET"},
+      {type:"item", c:"Radios, Electrical Equipment", r:"OFF"},
+      {type:"item", c:"Mixture", r:"IDLE CUT-OFF, pull full out"},
+      {type:"item", c:"Ignition Switch", r:"OFF"},
+      {type:"item", c:"Master Switch", r:"OFF"},
+      {type:"item", c:"Control Lock", r:"INSTALL"}
+    ]}
+  ];
+
+  // fix the Stall Warning item (needed the long form, set after array literal for readability)
+  NORMAL[1].entries.forEach(function(e){
+    if(e.c === "Stall Warning Opening"){
+      e.r = "CHECK for stoppage (handkerchief + suction test)";
+      delete e.sub;
+    }
+  });
+
+  var EMERGENCY = [
+    {id:"e-speeds", label:"Airspeeds", kind:"speeds", emg:true, groups:[
+      {title:"Engine Failure", rows:[
+        ["Engine Failure After Takeoff","60 KIAS"],
+        ["Maximum Glide","60 KIAS"]
+      ]},
+      {title:"Maneuvering Speed", rows:[
+        ["1670 Lbs","104 KIAS"],
+        ["1500 Lbs","98 KIAS"],
+        ["1350 Lbs","93 KIAS"]
+      ]},
+      {title:"Forced Landing", rows:[
+        ["Precautionary, With Engine Power","55 KIAS"],
+        ["Without Engine Power, Flaps Up","65 KIAS"],
+        ["Without Engine Power, Flaps Down","60 KIAS"]
+      ]}
+    ]},
+    {id:"e-fail-roll", label:"Engine Fail – TO Roll", emg:true, entries:[
+      {type:"item", c:"Throttle", r:"IDLE"},
+      {type:"item", c:"Brakes", r:"APPLY"},
+      {type:"item", c:"Wing Flaps", r:"RETRACT"},
+      {type:"item", c:"Mixture", r:"IDLE CUT-OFF"},
+      {type:"item", c:"Ignition Switch", r:"OFF"},
+      {type:"item", c:"Master Switch", r:"OFF"}
+    ]},
+    {id:"e-fail-aftto", label:"Engine Fail – After TO", emg:true, entries:[
+      {type:"item", c:"Airspeed", r:"60 KIAS"},
+      {type:"item", c:"Mixture", r:"IDLE CUT-OFF"},
+      {type:"item", c:"Fuel Shutoff Valve", r:"OFF"},
+      {type:"item", c:"Ignition Switch", r:"OFF"},
+      {type:"item", c:"Wing Flaps", r:"AS REQUIRED"},
+      {type:"item", c:"Master Switch", r:"OFF"}
+    ]},
+    {id:"e-fail-flight", label:"Engine Fail – In Flight", emg:true, entries:[
+      {type:"item", c:"Airspeed", r:"60 KIAS"},
+      {type:"item", c:"Carburetor Heat", r:"ON"},
+      {type:"item", c:"Primer", r:"IN and LOCKED"},
+      {type:"item", c:"Fuel Shutoff Valve", r:"ON"},
+      {type:"item", c:"Mixture", r:"RICH"},
+      {type:"item", c:"Ignition Switch", r:"BOTH (or START if prop stopped)"}
+    ]},
+    {id:"e-forcedland", label:"Forced Landing", emg:true, entries:[
+      {type:"item", c:"Airspeed", r:["65 KIAS (flaps UP)","60 KIAS (flaps DOWN)"]},
+      {type:"item", c:"Mixture", r:"IDLE CUT-OFF"},
+      {type:"item", c:"Fuel Shutoff Valve", r:"OFF"},
+      {type:"item", c:"Ignition Switch", r:"OFF"},
+      {type:"item", c:"Wing Flaps", r:"AS REQUIRED (30° recommended)"},
+      {type:"item", c:"Master Switch", r:"OFF"},
+      {type:"item", c:"Doors", r:"UNLATCH PRIOR TO TOUCHDOWN"},
+      {type:"item", c:"Touchdown", r:"SLIGHTLY TAIL LOW"},
+      {type:"item", c:"Brakes", r:"APPLY HEAVILY"}
+    ]},
+    {id:"e-precautland", label:"Precautionary Landing", emg:true, entries:[
+      {type:"item", c:"Airspeed", r:"60 KIAS"},
+      {type:"item", c:"Wing Flaps", r:"20°"},
+      {type:"item", c:"Selected Field", r:"FLY OVER, note terrain/obstructions, retract flaps at safe altitude"},
+      {type:"item", c:"Radio and Electrical Switches", r:"OFF"},
+      {type:"item", c:"Wing Flaps", r:"30° on final"},
+      {type:"item", c:"Airspeed", r:"55 KIAS"},
+      {type:"item", c:"Master Switch", r:"OFF"},
+      {type:"item", c:"Doors", r:"UNLATCH PRIOR TO TOUCHDOWN"},
+      {type:"item", c:"Ignition Switch", r:"OFF"},
+      {type:"item", c:"Brakes", r:"APPLY HEAVILY"}
+    ]},
+    {id:"e-ditching", label:"Ditching", emg:true, entries:[
+      {type:"item", c:"Radio", r:"TRANSMIT MAYDAY, 121.5, location/intentions"},
+      {type:"item", c:"Heavy Objects (baggage)", r:"SECURE OR JETTISON"},
+      {type:"item", c:"Approach", r:["High winds/seas – INTO THE WIND","Light wind, heavy swells – PARALLEL TO SWELLS"]},
+      {type:"item", c:"Wing Flaps", r:"30°"},
+      {type:"item", c:"Power", r:"ESTABLISH 300 FT/MIN at 55 KIAS"},
+      {type:"item", c:"Cabin Doors", r:"UNLATCH"},
+      {type:"item", c:"Touchdown", r:"LEVEL ATTITUDE, 300 FT/MIN"},
+      {type:"item", c:"Face", r:"CUSHION with folded coat"},
+      {type:"item", c:"Airplane", r:"EVACUATE via cabin doors"},
+      {type:"item", c:"Life Vests and Raft", r:"INFLATE"}
+    ]},
+    {id:"e-fire-start", label:"Fire – Start (Ground)", emg:true, entries:[
+      {type:"item", c:"Cranking", r:"CONTINUE, to draw flames/fuel through carburetor"},
+      {type:"branch", text:"If engine starts:", reset:false},
+      {type:"item", c:"Power", r:"1700 RPM for a few minutes"},
+      {type:"item", c:"Engine", r:"SHUTDOWN, inspect for damage"},
+      {type:"branch", text:"If engine fails to start:", reset:true},
+      {type:"item", c:"Cranking", r:"CONTINUE to obtain a start"},
+      {type:"item", c:"Fire Extinguisher", r:"OBTAIN (ground attendants if not installed)"},
+      {type:"item", c:"Engine", r:"SECURE", sub:[
+        ["a","Master Switch","OFF"],
+        ["b","Ignition Switch","OFF"],
+        ["c","Fuel Shutoff Valve","OFF"]
+      ]},
+      {type:"item", c:"Fire", r:"EXTINGUISH – extinguisher, wool blanket, or dirt"},
+      {type:"item", c:"Fire Damage", r:"INSPECT before next flight"}
+    ]},
+    {id:"e-fire-engine", label:"Fire – Engine (Air)", emg:true, entries:[
+      {type:"item", c:"Mixture", r:"IDLE CUT-OFF"},
+      {type:"item", c:"Fuel Shutoff Valve", r:"OFF"},
+      {type:"item", c:"Master Switch", r:"OFF"},
+      {type:"item", c:"Cabin Heat and Air", r:"OFF (except wing root vents)"},
+      {type:"item", c:"Airspeed", r:"85 KIAS if fire persists"},
+      {type:"item", c:"Forced Landing", r:"EXECUTE"}
+    ]},
+    {id:"e-fire-elec", label:"Fire – Electrical", emg:true, entries:[
+      {type:"item", c:"Master Switch", r:"OFF"},
+      {type:"item", c:"All Other Switches (except ignition)", r:"OFF"},
+      {type:"item", c:"Vents/Cabin Air/Heat", r:"CLOSED"},
+      {type:"item", c:"Fire Extinguisher", r:"ACTIVATE if available"},
+      {type:"warning", text:"After discharging an extinguisher in a closed cabin, ventilate the cabin."},
+      {type:"branch", text:"If fire is out and power is needed to continue flight:", reset:false},
+      {type:"item", c:"Master Switch", r:"ON"},
+      {type:"item", c:"Circuit Breakers", r:"CHECK for faulty circuit, do not reset"},
+      {type:"item", c:"Radio/Electrical Switches", r:"ON one at a time, with delay"},
+      {type:"item", c:"Vents/Cabin Air/Heat", r:"OPEN once fire confirmed out"}
+    ]},
+    {id:"e-fire-cabin", label:"Fire – Cabin", emg:true, entries:[
+      {type:"item", c:"Master Switch", r:"OFF"},
+      {type:"item", c:"Vents/Cabin Air/Heat", r:"CLOSED to avoid drafts"},
+      {type:"item", c:"Fire Extinguisher", r:"ACTIVATE if available"},
+      {type:"warning", text:"After discharging an extinguisher in a closed cabin, ventilate the cabin."},
+      {type:"item", c:"Land", r:"AS SOON AS POSSIBLE, inspect for damage"}
+    ]},
+    {id:"e-fire-wing", label:"Fire – Wing", emg:true, entries:[
+      {type:"item", c:"Navigation Light Switch", r:"OFF"},
+      {type:"item", c:"Strobe Light Switch (if installed)", r:"OFF"},
+      {type:"item", c:"Pitot Heat Switch (if installed)", r:"OFF"},
+      {type:"note", text:"Perform a side slip to keep flames away from the fuel tank and cabin, and land as soon as possible with flaps retracted."}
+    ]},
+    {id:"e-icing", label:"Icing Encounter", emg:true, entries:[
+      {type:"item", c:"Pitot heat switch (if installed)", r:"ON"},
+      {type:"item", c:"Turn back or change altitude", r:"seek less conducive OAT"},
+      {type:"item", c:"Cabin heat control", r:"FULL OUT for max defroster air"},
+      {type:"item", c:"Throttle", r:"OPEN to reduce prop ice build-up"},
+      {type:"item", c:"Carburetor heat", r:"APPLY as required; lean for max RPM if used continuously"},
+      {type:"item", c:"Plan a landing at nearest airport", r:null},
+      {type:"item", c:"With 1/4″+ ice on leading edges", r:"expect higher stall speed"},
+      {type:"item", c:"Wing flaps", r:"LEAVE RETRACTED"},
+      {type:"item", c:"Left window", r:"OPEN, scrape ice from windshield if practical"},
+      {type:"item", c:"Landing approach", r:"use forward slip if needed for visibility"},
+      {type:"item", c:"Approach speed", r:"65-75 KIAS depending on ice"},
+      {type:"item", c:"Landing", r:"LEVEL ATTITUDE"}
+    ]},
+    {id:"e-flattire", label:"Flat Main Tire", emg:true, entries:[
+      {type:"item", c:"Wing Flaps", r:"AS DESIRED"},
+      {type:"item", c:"Approach", r:"NORMAL"},
+      {type:"item", c:"Touchdown", r:"GOOD TIRE FIRST, hold off flat tire with aileron"}
+    ]},
+    {id:"e-overvolt", label:"Over-Voltage Light", emg:true, entries:[
+      {type:"item", c:"Master Switch", r:"OFF (both sides)"},
+      {type:"item", c:"Master Switch", r:"ON"},
+      {type:"item", c:"Over-Voltage Light", r:"OFF"},
+      {type:"branch", text:"If light illuminates again:", reset:false},
+      {type:"item", c:"Flight", r:"TERMINATE as soon as practical"}
+    ]},
+    {id:"e-ammeter", label:"Ammeter Discharge", emg:true, entries:[
+      {type:"item", c:"Alternator", r:"OFF"},
+      {type:"item", c:"Nonessential Electrical Equipment", r:"OFF"},
+      {type:"item", c:"Flight", r:"TERMINATE as soon as practical"}
+    ]}
+  ];
+
+  var ALL = NORMAL.concat(EMERGENCY);
+  var current = NORMAL[0].id;
+
+  var railLeft = document.getElementById("railLeft");
+  var railRight = document.getElementById("railRight");
+  var phaseHead = document.getElementById("phaseHead");
+  var phaseTitle = document.getElementById("phaseTitle");
+  var phaseCount = document.getElementById("phaseCount");
+  var itemList = document.getElementById("itemList");
+  var main = document.getElementById("main");
+
+  function buildRail(rail, list){
+    rail.innerHTML = "";
+    list.forEach(function(p){
+      var b = document.createElement("button");
+      b.className = "tab" + (p.kind === "speeds" ? " speeds" : "");
+      b.textContent = p.label;
+      b.dataset.id = p.id;
+      b.setAttribute("aria-selected", p.id === current ? "true" : "false");
+      b.addEventListener("click", function(){
+        current = p.id;
+        main.scrollTop = 0;
+        render();
+      });
+      rail.appendChild(b);
+    });
+  }
+
+  function el(tag, cls, html){
+    var d = document.createElement(tag);
+    if(cls) d.className = cls;
+    if(html !== undefined) d.innerHTML = html;
+    return d;
+  }
+
+  function responseHtml(r){
+    if(!r) return "";
+    var lines = Array.isArray(r) ? r : [r];
+    return '<span class="leader"></span><span class="response">' + lines.join("<br>") + '</span>';
+  }
+
+  function renderChecklistItems(entries){
+    itemList.innerHTML = "";
+    var step = 0;
+    var itemCount = 0;
+    entries.forEach(function(e){
+      if(e.type === "station"){
+        step = 0;
+        itemList.appendChild(el("div","stationHead", e.sym + " " + e.title));
+      } else if(e.type === "branch"){
+        if(e.reset) step = 0;
+        itemList.appendChild(el("div","branchHead", e.text));
+      } else if(e.type === "note" || e.type === "warning"){
+        var label = e.type === "warning" ? "Warning" : "Note";
+        itemList.appendChild(el("div", e.type, "<strong>" + label + ":</strong> " + e.text));
+      } else if(e.type === "item"){
+        step++; itemCount++;
+        var row = el("div","item",
+          '<span class="num">' + step + '.</span>' +
+          '<span class="challenge">' + e.c + '</span>' +
+          responseHtml(e.r)
+        );
+        itemList.appendChild(row);
+        if(e.sub){
+          e.sub.forEach(function(s){
+            itemList.appendChild(el("div","item sub",
+              '<span class="num">' + s[0] + '.</span>' +
+              '<span class="challenge">' + s[1] + '</span>' +
+              responseHtml(s[2])
+            ));
+          });
+        }
+      }
+    });
+    return itemCount;
+  }
+
+  function renderSpeeds(groups){
+    itemList.innerHTML = "";
+    var rowCount = 0;
+    groups.forEach(function(g){
+      if(g.title) itemList.appendChild(el("div","speedGroup", g.title));
+      g.rows.forEach(function(r){
+        rowCount++;
+        itemList.appendChild(el("div","item speedRow",
+          '<span class="challenge">' + r[0] + '</span>' +
+          responseHtml(r[1])
+        ));
+      });
+    });
+    return rowCount;
+  }
+
+  function render(){
+    var phase = ALL.filter(function(p){ return p.id === current; })[0] || ALL[0];
+    phaseTitle.textContent = phase.label;
+    phaseHead.className = "phaseHead" + (phase.emg ? " emg" : "");
+
+    var count;
+    if(phase.kind === "speeds"){
+      count = renderSpeeds(phase.groups);
+      phaseCount.textContent = count + (count === 1 ? " speed" : " speeds");
+    } else {
+      count = renderChecklistItems(phase.entries);
+      phaseCount.textContent = count + (count === 1 ? " item" : " items");
+    }
+
+    Array.prototype.forEach.call(railLeft.children, function(b){
+      b.setAttribute("aria-selected", b.dataset.id === current ? "true" : "false");
+    });
+    Array.prototype.forEach.call(railRight.children, function(b){
+      b.setAttribute("aria-selected", b.dataset.id === current ? "true" : "false");
+    });
+  }
+
+  buildRail(railLeft, NORMAL);
+  buildRail(railRight, EMERGENCY);
+  render();
+})();
+
+// Register the offline cache. After one successful load with a connection,
+// this lets the page (and Home Screen icon) keep working with no signal.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {
+      // If registration fails (e.g. unsupported context), the page still
+      // works normally — it just won't be cached for offline use.
+    });
+  });
+}
+</script>
