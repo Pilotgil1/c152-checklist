@@ -2,7 +2,7 @@
 // Strategy: serve from cache immediately when available (fast + works with
 // no connection), and refresh the cache from the network in the background
 // whenever it's reachable.
-var CACHE_NAME = "c152-checklist-v1";
+var CACHE_NAME = "c152-checklist-v6";
 
 self.addEventListener("install", function (event) {
   self.skipWaiting();
@@ -11,7 +11,17 @@ self.addEventListener("install", function (event) {
       return cache.addAll([
         self.registration.scope,
         "manifest.json",
-        "apple-touch-icon.png"
+        "apple-touch-icon.png",
+        "fonts/rajdhani-latin-400-normal.woff2",
+        "fonts/rajdhani-latin-500-normal.woff2",
+        "fonts/rajdhani-latin-600-normal.woff2",
+        "fonts/rajdhani-latin-700-normal.woff2",
+        "fonts/inter-latin-400-normal.woff2",
+        "fonts/inter-latin-500-normal.woff2",
+        "fonts/inter-latin-600-normal.woff2",
+        "fonts/inter-latin-600-italic.woff2",
+        "fonts/space-mono-latin-400-normal.woff2",
+        "fonts/space-mono-latin-700-normal.woff2"
       ]).catch(function () {
         // Even if a secondary asset fails to precache, don't block install.
         return caches.open(CACHE_NAME).then(function (cache) {
