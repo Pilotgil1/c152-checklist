@@ -2,7 +2,7 @@
 // Strategy: serve from cache immediately when available (fast + works with
 // no connection), and refresh the cache from the network in the background
 // whenever it's reachable.
-var CACHE_NAME = "c152-checklist-v6";
+var CACHE_NAME = "c152-checklist-v7";
 
 self.addEventListener("install", function (event) {
   self.skipWaiting();
