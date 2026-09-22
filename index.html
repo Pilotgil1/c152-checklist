@@ -11,7 +11,7 @@
     --ink:#FFFFFF;
     --ink-soft:#A0A6AD;
     --paper:#000000;
-    --paper-raised:#141414;
+    --paper-raised:#202020;
     --rule:#2A2A2A;
     --steel:#D8DCE1;
     --steel-ink:#000000;
@@ -131,11 +131,13 @@
     width:132px;
     display:flex;
     flex-direction:column;
-    padding:0;
+    gap:3px;
+    padding:3px 0;
     overflow:hidden;
+    background:var(--paper);
   }
-  .rail.left{ border-right:1px solid var(--rule); }
-  .rail.right{ border-left:1px solid var(--rule); }
+  .rail.left{ padding-right:3px; }
+  .rail.right{ padding-left:3px; }
 
   .tab{
     flex:1 1 0;
@@ -150,27 +152,34 @@
     letter-spacing:.005em;
     line-height:1.18;
     text-transform:uppercase;
-    padding:1px 4px;
-    border:0;
-    border-bottom:1px solid var(--rule);
+    padding:1px 8px;
+    border:1px solid var(--rule);
     background:var(--paper-raised);
     color:var(--ink-soft);
     cursor:pointer;
     box-sizing:border-box;
     overflow-wrap:break-word;
+    position:relative;
   }
-  .rail.left .tab{ border-right:3px solid transparent; }
-  .rail.right .tab{ border-left:3px solid transparent; color:var(--accent); }
+  /* Rounded on the outside edge only, like a physical folder/rolodex tab
+     that flares out from the spine and squares off against the page. */
+  .rail.left .tab{
+    border-radius:14px 0 0 14px;
+  }
+  .rail.right .tab{
+    border-radius:0 14px 14px 0;
+    color:var(--accent);
+  }
 
   .rail.left .tab[aria-selected="true"]{
     background:var(--steel);
     color:var(--steel-ink);
-    border-right-color:var(--steel);
+    z-index:1;
   }
   .rail.right .tab[aria-selected="true"]{
     background:var(--accent);
     color:var(--accent-ink);
-    border-left-color:var(--accent);
+    z-index:1;
   }
 
   main{
